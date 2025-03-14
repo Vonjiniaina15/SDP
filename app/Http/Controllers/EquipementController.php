@@ -10,7 +10,7 @@ class EquipementController extends Controller
     public function index()
     {
         $equipements = Equipement::paginate(10);
-        return view('test', ['Equipement' => $equipements, 'nom' => 'rakoto']);
+        return view('test', ['equipements' => $equipements, 'nom' => 'rakoto']);
     }
 
     public function store(Request $request)
@@ -43,4 +43,9 @@ class EquipementController extends Controller
 
         return redirect()->route('equipements.index')->with('success', 'Équipement supprimé avec succès.');
     }
+
+    public function create()
+{
+    return view('equipements.create');  // Cette vue doit être créée pour afficher le formulaire de création
+}
 }
