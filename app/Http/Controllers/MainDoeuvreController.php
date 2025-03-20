@@ -2,62 +2,98 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MainDoeuvre; // Importer le modèle MainDoeuvre
+use App\Models\MainDoeuvre;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class MainDoeuvreController extends Controller
 {
-    // Méthode pour afficher tous les ouvriers
-    public function index()
+    // Afficher tous les ouvriers
+    public function index(): JsonResponse
     {
         $mainDoeuvres = MainDoeuvre::all();
-        return response()->json($mainDoeuvres);
+        return response()->json([
+            'success' => true,
+            'data' => $mainDoeuvres
+        ]);
     }
 
-    // Méthode pour créer un nouvel ouvrier
-    public function store(Request $request)
+    // Créer un nouvel ouvrier
+    public function store(Request $request): JsonResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'taux_horaire' => 'required|numeric',
         ]);
 
-        $mainDoeuvre = MainDoeuvre::create([
-            'nom' => $request->nom,
-            'taux_horaire' => $request->taux_horaire,
-        ]);
+        $mainDoeuvre = MainDoeuvre::create($validated);
 
-        return response()->json($mainDoeuvre, 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Main d\'œuvre créée avec succès.',
+            'data' => $mainDoeuvre
+        ], 201);
     }
 
-    // Méthode pour afficher un ouvrier spécifique
-    public function show($id)
+    // Afficher un ouvrier spécifique
+    public function show($id): JsonResponse
     {
-        $mainDoeuvre = MainDoeuvre::findOrFail($id);
-        return response()->json($mainDoeuvre);
+        try {
+            $mainDoeuvre = MainDoeuvre::findOrFail($id);
+            return response()->json([
+                'success' => true,
+                'data' => $mainDoeuvre
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Main d\'œuvre introuvable.'
+            ], 404);
+        }
     }
 
-    // Méthode pour mettre à jour un ouvrier
-    public function update(Request $request, $id)
+    // Mettre à jour un ouvrier
+    public function update(Request $request, $id): JsonResponse
     {
-        $mainDoeuvre = MainDoeuvre::findOrFail($id);
+        try {
+            $mainDoeuvre = MainDoeuvre::findOrFail($id);
 
-        $request->validate([
-            'nom' => 'sometimes|string|max:255',
-            'taux_horaire' => 'sometimes|numeric',
-        ]);
+            $validated = $request->validate([
+                'nom' => 'sometimes|string|max:255',
+                'taux_horaire' => 'sometimes|numeric',
+            ]);
 
-        $mainDoeuvre->update($request->all());
+            $mainDoeuvre->update($validated);
 
-        return response()->json($mainDoeuvre);
+            return response()->json([
+                'success' => true,
+                'message' => 'Main d\'œuvre mise à jour avec succès.',
+                'data' => $mainDoeuvre
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la mise à jour.'
+            ], 400);
+        }
     }
 
-    // Méthode pour supprimer un ouvrier
-    public function destroy($id)
+    // Supprimer un ouvrier
+    public function destroy($id): JsonResponse
     {
-        $mainDoeuvre = MainDoeuvre::findOrFail($id);
-        $mainDoeuvre->delete();
+        try {
+            $mainDoeuvre = MainDoeuvre::findOrFail($id);
+            $mainDoeuvre->delete();
 
-        return response()->json(null, 204);
+            return response()->json([
+                'success' => true,
+                'message' => 'Main d\'œuvre supprimée avec succès.'
+            ], 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la suppression.'
+            ], 400);
+        }
     }
-} 
+}
