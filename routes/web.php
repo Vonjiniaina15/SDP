@@ -17,3 +17,6 @@ Route::get('/main-doeuvres', [MainDoeuvreController::class, 'index'])->name('mai
 Route::post('/main-doeuvres', [MainDoeuvreController::class, 'store'])->name('main-doeuvres.store');
 Route::put('/main-doeuvres/{id}', [MainDoeuvreController::class, 'update'])->name('main-doeuvres.update');
 Route::delete('/main-doeuvres/{id}', [MainDoeuvreController::class, 'destroy'])->name('main-doeuvres.destroy');
+Route::get('/main-doeuvres', function () {
+    return view('main_doeuvres.index');
+})->name('main-doeuvres.view');
