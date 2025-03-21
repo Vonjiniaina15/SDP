@@ -9,13 +9,18 @@ use Illuminate\Http\JsonResponse;
 class MainDoeuvreController extends Controller
 {
     // Afficher tous les ouvriers
-    public function index(): JsonResponse
+    public function index(Request $request)
     {
         $mainDoeuvres = MainDoeuvre::all();
-        return response()->json([
-            'success' => true,
-            'data' => $mainDoeuvres
-        ]);
+    
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $mainDoeuvres
+            ]);
+        }
+    
+        return view('main_doeuvres.index', compact('mainDoeuvres'));
     }
 
     // Créer un nouvel ouvrier
