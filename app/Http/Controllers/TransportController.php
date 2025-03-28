@@ -8,12 +8,15 @@ use Illuminate\Http\Request;
 class TransportController extends Controller
 {
     // Méthode pour afficher tous les transports
-    public function index()
-    {
-        $transports = Transport::all();
-        return response()->json($transports);
+    public function index(Request $request)
+{
+    if ($request->wantsJson() || $request->ajax()) {
+        return response()->json(Transport::all());
     }
 
+    $transports = Transport::all();
+    return view('transports.index', compact('transports'));
+}
     // Méthode pour créer un nouveau transport
     public function store(Request $request)
     {

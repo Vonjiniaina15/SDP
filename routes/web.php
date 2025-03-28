@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EquipementController;
 use App\Http\Controllers\MainDoeuvreController;
 use App\Http\Controllers\MateriauxController;
+use App\Http\Controllers\TransportController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,3 +26,5 @@ Route::get('/materiaux', [MateriauxController::class, 'index'])->name('materiaux
 Route::post('/materiaux', [MateriauxController::class, 'store'])->name('materiaux.store');
 Route::put('/materiaux/{id}', [MateriauxController::class, 'update'])->name('materiaux.update');
 Route::delete('/materiaux/{id}', [MateriauxController::class, 'destroy'])->name('materiaux.destroy');
+
+Route::resource('transports', TransportController::class);
