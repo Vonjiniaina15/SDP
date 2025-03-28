@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sous_detail_prix', function (Blueprint $table) {
             $table->id();
             $table->foreignId('materiaux_id')->constrained('materiaux')->onDelete('cascade');
-            $table->foreignId('main_doeuvre_id')->constrained('main_doeuvre')->onDelete('cascade');
+            $table->foreignId('main_doeuvre_id')->constrained('main_doeuvres')->onDelete('cascade');
             $table->foreignId('equipements_id')->constrained('equipements')->onDelete('cascade');
             $table->foreignId('transport_id')->constrained('transport')->onDelete('cascade');
             $table->decimal('quantite_materiaux', 10, 2);
