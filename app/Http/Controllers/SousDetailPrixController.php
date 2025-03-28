@@ -8,10 +8,14 @@ use Illuminate\Http\Request;
 class SousDetailPrixController extends Controller
 {
     // Méthode pour afficher tous les sous-détails de prix
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(SousDetailPrix::all());
+        }
+    
         $sousDetailsPrix = SousDetailPrix::all();
-        return response()->json($sousDetailsPrix);
+        return view('sousdetailsprix.index', compact('sousDetailsPrix'));
     }
 
     // Méthode pour créer un nouveau sous-détail de prix

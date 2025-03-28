@@ -5,7 +5,7 @@ use App\Http\Controllers\EquipementController;
 use App\Http\Controllers\MainDoeuvreController;
 use App\Http\Controllers\MateriauxController;
 use App\Http\Controllers\TransportController;
-
+use App\Http\Controllers\SousDetailPrixController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,3 +28,5 @@ Route::put('/materiaux/{id}', [MateriauxController::class, 'update'])->name('mat
 Route::delete('/materiaux/{id}', [MateriauxController::class, 'destroy'])->name('materiaux.destroy');
 
 Route::resource('transports', TransportController::class);
+
+Route::resource('sousdetailsprix', SousDetailPrixController::class);
