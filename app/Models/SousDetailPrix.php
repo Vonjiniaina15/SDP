@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class SousDetailPrix extends Model
 {
-    // Si la table n'est pas le pluriel du nom du modèle, définis-la ici
+    // Définition de la table associée
     protected $table = 'sous_details_prix';
 
-    // Spécifie les champs qui peuvent être assignés en masse
+    // Champs pouvant être remplis massivement
     protected $fillable = [
         'materiaux_id', 
         'main_doeuvre_id', 
@@ -20,10 +20,10 @@ class SousDetailPrix extends Model
         'cout_total'
     ];
 
-    // Définir les relations avec d'autres modèles
+    // Relations avec d'autres modèles
 
     // Relation avec le modèle Materiaux
-    public function materiau()
+    public function materiaux()
     {
         return $this->belongsTo(Materiau::class, 'materiaux_id');
     }
@@ -34,8 +34,8 @@ class SousDetailPrix extends Model
         return $this->belongsTo(MainDoeuvre::class, 'main_doeuvre_id');
     }
 
-    // Relation avec le modèle Equipement
-    public function equipement()
+    // Relation avec le modèle Equipements
+    public function equipements()
     {
         return $this->belongsTo(Equipement::class, 'equipements_id');
     }
