@@ -22,6 +22,8 @@
                 <th>Transport</th>
                 <th>Quantité</th>
                 <th>Heures Main d'oeuvre</th>
+                <th>K1</th>
+                <th>R</th>
                 <th>Coût Total</th>
                 <th>Actions</th>
             </tr>
@@ -36,6 +38,8 @@
                 <td>{{ $sousDetail->transport->destination }}</td>
                 <td>{{ $sousDetail->quantite_materiaux }}</td>
                 <td>{{ $sousDetail->heures_main_doeuvre }}</td>
+                <td>{{ $sousDetail->k1 }}</td>
+                <td>{{ $sousDetail->r }}</td>
                 <td>{{ $sousDetail->cout_total }}</td>
                 <td>
                     <button class="btn btn-warning btn-edit" data-id="{{ $sousDetail->id }}">Modifier</button>
@@ -61,27 +65,19 @@
                     <!-- Champs pour les détails -->
                     <div class="mb-3">
                         <label for="materiaux_id" class="form-label">Matériau</label>
-                        <select class="form-select" id="materiaux_id">
-                            <!-- Matériaux à remplir dynamiquement -->
-                        </select>
+                        <select class="form-select" id="materiaux_id"></select>
                     </div>
                     <div class="mb-3">
                         <label for="main_doeuvre_id" class="form-label">Main d'Oeuvre</label>
-                        <select class="form-select" id="main_doeuvre_id">
-                            <!-- Main d'oeuvre à remplir dynamiquement -->
-                        </select>
+                        <select class="form-select" id="main_doeuvre_id"></select>
                     </div>
                     <div class="mb-3">
                         <label for="equipements_id" class="form-label">Equipement</label>
-                        <select class="form-select" id="equipements_id">
-                            <!-- Equipements à remplir dynamiquement -->
-                        </select>
+                        <select class="form-select" id="equipements_id"></select>
                     </div>
                     <div class="mb-3">
                         <label for="transport_id" class="form-label">Transport</label>
-                        <select class="form-select" id="transport_id">
-                            <!-- Transports à remplir dynamiquement -->
-                        </select>
+                        <select class="form-select" id="transport_id"></select>
                     </div>
                     <div class="mb-3">
                         <label for="quantite_materiaux" class="form-label">Quantité de Matériaux</label>
@@ -90,6 +86,14 @@
                     <div class="mb-3">
                         <label for="heures_main_doeuvre" class="form-label">Heures de Main d'Oeuvre</label>
                         <input type="number" class="form-control" id="heures_main_doeuvre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="k1" class="form-label">Coefficient K1</label>
+                        <input type="number" class="form-control" id="k1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="r" class="form-label">Coefficient R</label>
+                        <input type="number" class="form-control" id="r" required>
                     </div>
                     <div class="mb-3">
                         <label for="cout_total" class="form-label">Coût Total</label>
@@ -106,9 +110,7 @@
 
 @section('scripts')
 <script>
-// Ajouter un script pour peupler les sélecteurs dynamique pour matériaux, main d'oeuvre, équipements, et transports, etc.
 document.addEventListener("DOMContentLoaded", function () {
-    // Gestion du formulaire d'ajout/modification
     document.getElementById('sousDetailForm').addEventListener('submit', function (event) {
         event.preventDefault();
         let id = document.getElementById('sous_detail_id').value;
@@ -118,6 +120,8 @@ document.addEventListener("DOMContentLoaded", function () {
         let transport_id = document.getElementById('transport_id').value;
         let quantite_materiaux = document.getElementById('quantite_materiaux').value;
         let heures_main_doeuvre = document.getElementById('heures_main_doeuvre').value;
+        let k1 = document.getElementById('k1').value;
+        let r = document.getElementById('r').value;
         let cout_total = document.getElementById('cout_total').value;
 
         let url = id ? `/sousdetailsprix/${id}` : "{{ route('sousdetailsprix.store') }}";
@@ -131,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify({
                 materiaux_id, main_doeuvre_id, equipements_id, transport_id,
-                quantite_materiaux, heures_main_doeuvre, cout_total
+                quantite_materiaux, heures_main_doeuvre, k1, r, cout_total
             })
         })
         .then(response => response.json())

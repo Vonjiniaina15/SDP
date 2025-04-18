@@ -2,23 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SousDetailPrix; // Importer le modèle SousDetailPrix
+use App\Models\SousDetailPrix;
 use Illuminate\Http\Request;
 
 class SousDetailPrixController extends Controller
 {
-    // Méthode pour afficher tous les sous-détails de prix
     public function index(Request $request)
     {
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json(SousDetailPrix::all());
         }
-    
+
         $sousDetailsPrix = SousDetailPrix::all();
         return view('sousdetailsprix.index', compact('sousDetailsPrix'));
     }
 
-    // Méthode pour créer un nouveau sous-détail de prix
     public function store(Request $request)
     {
         $request->validate([
@@ -29,21 +27,24 @@ class SousDetailPrixController extends Controller
             'quantite_materiaux' => 'required|numeric',
             'heures_main_doeuvre' => 'required|numeric',
             'cout_total' => 'required|numeric',
+            'k1' => 'required|numeric',
+            'r' => 'required|numeric',
         ]);
 
-        $sousDetailPrix = SousDetailPrix::create($request->all());
+        $data = $request->all();
+        $data['prix_unitaire'] = ($data['k1'] * $data['cout_total']) / $data['r'];
+
+        $sousDetailPrix = SousDetailPrix::create($data);
 
         return response()->json($sousDetailPrix, 201);
     }
 
-    // Méthode pour afficher un sous-détail de prix spécifique
     public function show($id)
     {
         $sousDetailPrix = SousDetailPrix::findOrFail($id);
         return response()->json($sousDetailPrix);
     }
 
-    // Méthode pour mettre à jour un sous-détail de prix
     public function update(Request $request, $id)
     {
         $sousDetailPrix = SousDetailPrix::findOrFail($id);
@@ -56,14 +57,25 @@ class SousDetailPrixController extends Controller
             'quantite_materiaux' => 'sometimes|numeric',
             'heures_main_doeuvre' => 'sometimes|numeric',
             'cout_total' => 'sometimes|numeric',
+            'k1' => 'sometimes|numeric',
+            'r' => 'sometimes|numeric',
         ]);
 
-        $sousDetailPrix->update($request->all());
+        $data = $request->all();
+
+        // Recalcul du prix unitaire si K1 ou R ou coût total est modifié
+        if (isset($data['k1']) || isset($data['r']) || isset($data['cout_total'])) {
+            $k1 = $data['k1'] ?? $sousDetailPrix->k1;
+            $r = $data['r'] ?? $sousDetailPrix->r;
+            $cout_total = $data['cout_total'] ?? $sousDetailPrix->cout_total;
+            $data['prix_unitaire'] = ($k1 * $cout_total) / $r;
+        }
+
+        $sousDetailPrix->update($data);
 
         return response()->json($sousDetailPrix);
     }
 
-    // Méthode pour supprimer un sous-détail de prix
     public function destroy($id)
     {
         $sousDetailPrix = SousDetailPrix::findOrFail($id);

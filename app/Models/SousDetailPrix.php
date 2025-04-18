@@ -17,7 +17,10 @@ class SousDetailPrix extends Model
         'transport_id', 
         'quantite_materiaux', 
         'heures_main_doeuvre', 
-        'cout_total'
+        'cout_total',
+        'k1',
+        'r',
+        'prix_unitaire'
     ];
 
     // Relations avec d'autres modèles
