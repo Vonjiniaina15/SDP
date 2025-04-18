@@ -18,6 +18,7 @@
                 <th>ID</th>
                 <th>Nom</th>
                 <th>Prix Unitaire</th>
+                <th>Unité</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -44,6 +45,16 @@
                         <label for="prix_unitaire" class="form-label">Prix Unitaire</label>
                         <input type="number" class="form-control" id="prix_unitaire" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="unite" class="form-label">Unité</label>
+                        <select class="form-select" id="unite" required>
+                            <option value="kg">kg</option>
+                            <option value="m3">m³</option>
+                            <option value="L">L</option>
+                            <option value="ml">ml</option>
+                            <option value="fft">fft</option>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-success">Enregistrer</button>
                 </form>
             </div>
@@ -63,11 +74,12 @@ document.addEventListener("DOMContentLoaded", function () {
             { data: "id" },
             { data: "nom" },
             { data: "prix_unitaire" },
+            { data: "unite" },
             {
                 data: null,
                 render: function (data, type, row) {
                     return `
-                        <button class="btn btn-warning btn-edit" data-id="${row.id}" data-nom="${row.nom}" data-prix="${row.prix_unitaire}">Modifier</button>
+                        <button class="btn btn-warning btn-edit" data-id="${row.id}" data-nom="${row.nom}" data-prix="${row.prix_unitaire}" data-unite="${row.unite}">Modifier</button>
                         <button class="btn btn-danger btn-delete" data-id="${row.id}">Supprimer</button>
                     `;
                 }
@@ -81,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let id = document.getElementById('materiau_id').value;
         let nom = document.getElementById('nom').value;
         let prix = document.getElementById('prix_unitaire').value;
+        let unite = document.getElementById('unite').value;
 
         let url = id ? `/materiaux/${id}` : "{{ route('materiaux.store') }}";
         let method = id ? 'PUT' : 'POST';
@@ -91,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
-            body: JSON.stringify({ nom, prix_unitaire: prix })
+            body: JSON.stringify({ nom, prix_unitaire: prix, unite })
         })
         .then(response => response.json())
         .then(data => {
@@ -109,11 +122,13 @@ document.addEventListener("DOMContentLoaded", function () {
         let id = $(this).data('id');
         let nom = $(this).data('nom');
         let prix = $(this).data('prix');
+        let unite = $(this).data('unite');
 
         document.getElementById('materiau_id').value = id;
         document.getElementById('nom').value = nom;
         document.getElementById('prix_unitaire').value = prix;
-        
+        document.getElementById('unite').value = unite;
+
         $('#materiauModal').modal('show');
     });
 

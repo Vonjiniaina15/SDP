@@ -9,11 +9,12 @@ class Materiau extends Model
 {
     use HasFactory;
 
-    protected $table = 'materiaux'; // Ajoute cette ligne pour dire à Laravel d'utiliser la table "materiaux"
+    protected $table = 'materiaux';
 
-    protected $fillable = ['nom', 'prix_unitaire']; // Champs qui peuvent être remplis via un formulaire
+    // Ajout de 'unite' ici pour permettre l'assignation en masse
+    protected $fillable = ['nom', 'prix_unitaire', 'unite'];
 
     protected $casts = [
-        'prix_unitaire' => 'decimal:2' // Assurer que le prix est un nombre décimal avec 2 chiffres après la virgule
+        'prix_unitaire' => 'decimal:2'
     ];
 }

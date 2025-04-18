@@ -29,6 +29,7 @@ class MainDoeuvreController extends Controller
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'taux_horaire' => 'required|numeric',
+            'unite' => 'required|string|max:10'
         ]);
 
         $mainDoeuvre = MainDoeuvre::create($validated);
@@ -66,6 +67,7 @@ class MainDoeuvreController extends Controller
             $validated = $request->validate([
                 'nom' => 'sometimes|string|max:255',
                 'taux_horaire' => 'sometimes|numeric',
+                'unite' => 'sometimes|string|max:10'
             ]);
 
             $mainDoeuvre->update($validated);

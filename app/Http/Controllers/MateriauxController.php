@@ -13,23 +13,20 @@ class MateriauxController extends Controller
     public function index(Request $request)
     {
         $query = Materiau::query();
-    
-        // Si un paramètre de recherche est passé
+
         if ($request->has('search')) {
             $query->where('nom', 'ILIKE', "%{$request->search}%");
         }
-    
+
         $materiaux = $query->paginate(10);
-    
-        // Si c'est une requête AJAX ou API, retourner du JSON
+
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,
                 'data' => $materiaux
             ]);
         }
-    
-        // Sinon, retourner la vue Blade
+
         return view('materiaux.index', compact('materiaux'));
     }
 
@@ -38,6 +35,7 @@ class MateriauxController extends Controller
         $validatedData = $request->validate([
             'nom' => 'required|string|max:255',
             'prix_unitaire' => 'required|numeric|min:0',
+            'unite' => 'required|string|max:20' 
         ]);
 
         $materiau = Materiau::create($validatedData);
@@ -65,6 +63,7 @@ class MateriauxController extends Controller
         $validatedData = $request->validate([
             'nom' => 'sometimes|string|max:255',
             'prix_unitaire' => 'sometimes|numeric|min:0',
+            'unite' => 'sometimes|string|max:20' 
         ]);
 
         $materiau->update($validatedData);

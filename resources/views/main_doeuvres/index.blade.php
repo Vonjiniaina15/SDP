@@ -6,9 +6,10 @@
 
     <!-- Formulaire d'ajout -->
     <form id="addForm" class="mb-4 bg-gray-100 p-4 rounded">
-        <div class="flex space-x-4">
-            <input type="text" id="nom" name="nom" placeholder="Nom" required class="border p-2 rounded w-1/2">
-            <input type="number" id="taux_horaire" name="taux_horaire" placeholder="Taux Horaire" required class="border p-2 rounded w-1/4">
+        <div class="flex space-x-4 items-center">
+            <input type="text" id="nom" name="nom" placeholder="Nom" required class="border p-2 rounded w-1/3">
+            <input type="number" id="taux_horaire" name="taux_horaire" placeholder="Taux Horaire" step="0.01" required class="border p-2 rounded w-1/4">
+            <input type="text" id="unite" name="unite" placeholder="Unité (ex: h)" required class="border p-2 rounded w-1/6">
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Ajouter</button>
         </div>
     </form>
@@ -19,6 +20,7 @@
             <tr class="bg-gray-200">
                 <th class="border p-2">Nom</th>
                 <th class="border p-2">Taux Horaire</th>
+                <th class="border p-2">Unité</th>
                 <th class="border p-2">Actions</th>
             </tr>
         </thead>
@@ -27,6 +29,7 @@
                 <tr data-id="{{ $ouvrier->id }}">
                     <td class="border p-2 editable" contenteditable="true">{{ $ouvrier->nom }}</td>
                     <td class="border p-2 editable" contenteditable="true">{{ $ouvrier->taux_horaire }}</td>
+                    <td class="border p-2 editable" contenteditable="true">{{ $ouvrier->unite }}</td>
                     <td class="border p-2">
                         <button class="bg-green-500 text-white px-2 py-1 rounded updateBtn">Modifier</button>
                         <button class="bg-red-500 text-white px-2 py-1 rounded deleteBtn">Supprimer</button>
@@ -56,10 +59,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }).then(response => response.json())
           .then(data => {
+              const ouvrier = data.data;
               mainDoeuvreList.innerHTML += `
-                <tr data-id="${data.id}">
-                    <td class="border p-2 editable" contenteditable="true">${data.nom}</td>
-                    <td class="border p-2 editable" contenteditable="true">${data.taux_horaire}</td>
+                <tr data-id="${ouvrier.id}">
+                    <td class="border p-2 editable" contenteditable="true">${ouvrier.nom}</td>
+                    <td class="border p-2 editable" contenteditable="true">${ouvrier.taux_horaire}</td>
+                    <td class="border p-2 editable" contenteditable="true">${ouvrier.unite}</td>
                     <td class="border p-2">
                         <button class="bg-green-500 text-white px-2 py-1 rounded updateBtn">Modifier</button>
                         <button class="bg-red-500 text-white px-2 py-1 rounded deleteBtn">Supprimer</button>
@@ -77,10 +82,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.target.classList.contains("updateBtn")) {
             let nom = row.children[0].innerText;
             let taux_horaire = row.children[1].innerText;
+            let unite = row.children[2].innerText;
 
             fetch(`/main-doeuvres/${id}`, {
                 method: "PUT",
-                body: JSON.stringify({ nom, taux_horaire }),
+                body: JSON.stringify({ nom, taux_horaire, unite }),
                 headers: {
                     "X-CSRF-TOKEN": "{{ csrf_token() }}",
                     "Content-Type": "application/json"
